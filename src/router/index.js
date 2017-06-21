@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
-import Binding from '@/components/Binding'
+import Basic from '@/components/Basic'
 
 Vue.use(Router)
 
@@ -13,9 +13,9 @@ export default new Router({
       component: Hello
     },
     {
-      path: '/binding',
-      name: 'Binding',
-      component: Binding
+      path: '/basic',
+      name: 'Basic',
+      component: Basic
     }
   ]
 })
