@@ -104,10 +104,7 @@ export default new Vuex.Store({
       state[state.contacts.indexOf(contacts[0])] = contact
     },
     REMOVE_CONTACT (state, contact) {
-      let contacts = state.contacts.filter((contact) => {
-        return contact.id === contact.id
-      })
-      state.contacts.splice(state.contacts.indexOf(contacts[0]), 1)
+      state.contacts.splice(state.contacts.indexOf(contact), 1)
     }
   },
   actions: {
