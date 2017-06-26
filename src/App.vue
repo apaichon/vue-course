@@ -7,10 +7,11 @@
 
 <script>
 import menubar from './components/MenuBar'
+import semantic from '../node_modules/semantic-ui-css'
 
 export default {
   name: 'app',
-  components: { menubar }
+  components: { menubar, semantic }
 }
 </script>
 
