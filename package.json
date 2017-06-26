@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "body-parser": "^1.17.2",
     "jquery": "^3.2.1",
     "mongodb": "^2.2.29",
     "semantic-ui-css": "^2.2.10",

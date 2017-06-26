@@ -38,17 +38,9 @@
                 <button class="ui primary basic button" @click="onCloseClicked"><i class="close red icon"></i>Close</button>
             </div>
             <div class="ui error message transition hidden">
-                <!-- <i class="close icon"></i>
-                <div class="header">
-                 Error
-                </div>
-                <ul class="list">
-                {{message}}
-                </ul> -->
             </div>
         </form>
     </div>
-
   </div>
 </template>
 <script>

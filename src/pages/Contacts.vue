@@ -6,6 +6,7 @@
     <cardlist :items="items" @onEditClicked="onEditClicked" @onRemoveClicked="onRemoveClicked"></cardlist>
     <contactEditor modalId="contactModal" :contact="contact" :mode="mode" @onSaveClicked="validateContact"></contactEditor>
   </div>
+  <modalmessage modalId="modalMessage" :headerTitle="headerTitle" :message="message"></modalMessage>
 </div>
 </template>
 <script>
@@ -15,10 +16,12 @@ import cardlist from '@/components/CardList'
 import contactEditor from '@/components/ContactEditor'
 import contactsStore from '@/stores/Contacts'
 import $ from 'jquery'
+import contactsApi from '@/api/Contacts'
+import modalmessage from '@/components/ModalMessage'
 
 export default {
   name: 'contacts',
-  components: {searchpanel, datapager, cardlist, contactEditor},
+  components: {searchpanel, datapager, cardlist, contactEditor, modalmessage},
   mounted () {
     this.items = contactsStore.getters.contacts
   },
@@ -27,6 +30,8 @@ export default {
       items: [],
       contact: {},
       mode: 'Add',
+      headerTitle: '',
+      message: '',
       validateRule: {
         fields: {
           contactId: {
@@ -63,16 +68,22 @@ export default {
         },
         onSuccess: () => {
           this.saveContact(this.mode)
-          $('.ui.modal').modal('hide')
+          $('#contactModal').modal('hide')
         }
       }
     }
   },
   methods: {
     addContact () {
-      contactsStore.dispatch('addContact', this.contact)
-      .then(() => {
-        this.contacts = contactsStore.getters.contacts
+      contactsApi.add(this.contact)
+      .then((result) => {
+        if (result.status === 200 && result.data.ok === 1) {
+          this.showMessage('Insert', 'Success')
+        } else {
+          this.showMessage('Insert', 'Error', result.statusText)
+        }
+      }).catch((result) => {
+        this.showMessage('Insert', 'Error', JSON.stringify(result))
       })
     },
     editContact () {
@@ -97,7 +108,7 @@ export default {
           break
       }
       $('.ui.error.message').transition('hide')
-      $('.ui.modal').modal('show')
+      $('#contactModal').modal('show')
     },
     onRemoveClicked (item) {
       console.log('remove clicked')
@@ -116,6 +127,23 @@ export default {
           this.editContact()
           break
       }
+    },
+    showMessage (action, status, unhandleMsg) {
+      let MODAL_MESSAGE_ID = '#modalMessage'
+      this.headerTitle = status
+      switch (status) {
+        case 'Success':
+          $(MODAL_MESSAGE_ID).removeClass('error message')
+          $(MODAL_MESSAGE_ID).addClass('success message')
+          this.message = `${action} successfully.`
+          break
+        case 'Error':
+          $(MODAL_MESSAGE_ID).removeClass('success message')
+          $(MODAL_MESSAGE_ID).addClass('error message')
+          this.message = `${action} ${unhandleMsg}`
+          break
+      }
+      $('#modalMessage').modal('show')
     },
     validateContact () {
       $('.ui.form').form(this.validateRule)
