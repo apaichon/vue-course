@@ -6,6 +6,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     contact: {},
+    pager: {
+      pageSize: 2,
+      currentPage: 1,
+      totalPages: 0
+    },
     contacts: [
       {
         'id': 'c1',
@@ -91,7 +96,9 @@ export default new Vuex.Store({
     ]
   },
   getters: {
-    contacts: state => state.contacts
+    contacts: state => state.contacts,
+    currentPage: state => state.pager.currentPage,
+    totalPages: state => state.pager.totalPages
   },
   mutations: {
     ADD_CONTACT (state, contact) {
@@ -105,6 +112,21 @@ export default new Vuex.Store({
     },
     REMOVE_CONTACT (state, contact) {
       state.contacts.splice(state.contacts.indexOf(contact), 1)
+    },
+    SET_CONTACTS (state, contacts) {
+      state.contacts = contacts
+    },
+    SET_CURRENT_PAGE (state, page) {
+      if (page > state.pager.totalPages) {
+        state.pager.currentPage = state.pager.totalPages
+      } else if (page <= 0) {
+        state.pager.currentPage = 1
+      } else {
+        state.pager.currentPage = page
+      }
+    },
+    SET_TOTAL_PAGES (state, total) {
+      state.pager.totalPages = total
     }
   },
   actions: {
@@ -116,6 +138,15 @@ export default new Vuex.Store({
     },
     removeContact ({commit}, contact) {
       commit('REMOVE_CONTACT', contact)
+    },
+    setContacts ({commit}, contacts) {
+      commit('SET_CONTACTS', contacts)
+    },
+    setCurrentPage ({commit}, page) {
+      commit('SET_CURRENT_PAGE', page)
+    },
+    setTotalPages ({commit}, total) {
+      commit('SET_TOTAL_PAGES', total)
     }
   }
 })

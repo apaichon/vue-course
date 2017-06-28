@@ -1,9 +1,9 @@
 <template>
 <div class="ui center aligned segment">
-  <searchpanel @onClickedAdd="openContactEditor('Add')"></searchpanel>
-  <datapager></datapager>
+  <searchpanel @onClickedAdd="openContactEditor('Add')" @onSearchClicked="onSearchClicked"></searchpanel>
+  <datapager :currentPage="getCurrentPage" @onFirstClicked="onFirstClicked" @onPrevClicked="onPrevClicked" @onNextClicked="onNextClicked" @onLastClicked="onLastClicked"></datapager>
   <div class ="ui center aligned segment"> 
-    <cardlist :items="items" @onEditClicked="onEditClicked" @onRemoveClicked="onRemoveClicked"></cardlist>
+    <cardlist :items="getContactList" @onEditClicked="onEditClicked" @onRemoveClicked="onRemoveClicked"></cardlist>
     <contactEditor modalId="contactModal" :contact="contact" :mode="mode" @onSaveClicked="validateContact"></contactEditor>
   </div>
   <modalmessage modalId="modalMessage" :headerTitle="headerTitle" :message="message"></modalMessage>
@@ -23,15 +23,25 @@ export default {
   name: 'contacts',
   components: {searchpanel, datapager, cardlist, contactEditor, modalmessage},
   mounted () {
-    this.items = contactsStore.getters.contacts
+    this.getContact({condition: {}})
+  },
+  computed: {
+    getCurrentPage () {
+      return contactsStore.getters.currentPage
+    },
+    getContactList () {
+      return contactsStore.getters.contacts
+    }
   },
   data () {
     return {
       items: [],
+      currentPage: 1,
       contact: {},
       mode: 'Add',
       headerTitle: '',
       message: '',
+      textSearch: '',
       validateRule: {
         fields: {
           contactId: {
@@ -79,6 +89,7 @@ export default {
       .then((result) => {
         if (result.status === 200 && result.data.ok === 1) {
           this.showMessage('Insert', 'Success')
+          contactsStore.dispatch('setCurrentPage', 1)
         } else {
           this.showMessage('Insert', 'Error', result.statusText)
         }
@@ -88,13 +99,47 @@ export default {
     },
     editContact () {
       contactsStore.dispatch('updateContact', this.contact)
-       .then(() => {
+       /* .then(() => {
          this.contacts = contactsStore.getters.contacts
-       })
+      */
+    },
+    getContact (condition) {
+      contactsApi.get(condition)
+      .then((result) => {
+        if (result.status === 200) {
+          console.log('result', result)
+          contactsStore.dispatch('setContacts', result.data.result)
+          contactsStore.dispatch('setTotalPages', result.data.totalPages)
+        }
+      })
+    },
+    getSearchCondition () {
+      var condition = {}
+      if (this.textSearch.length > 0) {
+        condition.condition = {'$or': [
+            {'id': {'$regex': `.*${this.textSearch}.*`}},
+            {'firstName': {'$regex': `.*${this.textSearch}.*`}},
+            {'lastName': {'$regex': `.*${this.textSearch}.*`}}
+        ]
+        }
+      }
+      return condition
     },
     onEditClicked (item) {
       this.contact = item
       this.openContactEditor('Edit')
+    },
+    onFirstClicked () {
+      contactsStore.dispatch('setCurrentPage', 1)
+    },
+    onPrevClicked () {
+      contactsStore.dispatch('setCurrentPage', contactsStore.getters.currentPage - 1)
+    },
+    onNextClicked () {
+      contactsStore.dispatch('setCurrentPage', contactsStore.getters.currentPage + 1)
+    },
+    onLastClicked () {
+      contactsStore.dispatch('setCurrentPage', contactsStore.getters.totalPages)
     },
     openContactEditor (mode) {
       this.mode = mode
@@ -111,12 +156,15 @@ export default {
       $('#contactModal').modal('show')
     },
     onRemoveClicked (item) {
-      console.log('remove clicked')
       contactsStore.dispatch('removeContact', item)
-       .then(() => {
+       /* .then(() => {
          this.contacts = contactsStore.getters.contacts
-         console.log(this.contacts)
-       })
+       }) */
+    },
+    onSearchClicked (textSearch) {
+      this.textSearch = textSearch
+      var condition = this.getSearchCondition()
+      this.getContact(condition)
     },
     saveContact (mode) {
       switch (mode) {
@@ -147,6 +195,13 @@ export default {
     },
     validateContact () {
       $('.ui.form').form(this.validateRule)
+    }
+  },
+  watch: {
+    getCurrentPage: function (val) {
+      var condition = this.getSearchCondition()
+      condition.currentPage = val
+      this.getContact(condition)
     }
   }
 }
