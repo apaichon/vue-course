@@ -9,7 +9,7 @@ export default new Vuex.Store({
     pager: {
       pageSize: 2,
       currentPage: 1,
-      totalPages: 0
+      totalPages: 1
     },
     contacts: [
       {
@@ -150,3 +150,4 @@ export default new Vuex.Store({
     }
   }
 })
+

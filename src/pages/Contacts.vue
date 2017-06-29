@@ -7,6 +7,7 @@
     <contactEditor modalId="contactModal" :contact="contact" :mode="mode" @onSaveClicked="validateContact"></contactEditor>
   </div>
   <modalmessage modalId="modalMessage" :headerTitle="headerTitle" :message="message"></modalMessage>
+  <confirm-modal id="confirmModal" header="Deleting" :message="msgDelete" @onOKClicked="onOKClicked" ></confirm-modal>
 </div>
 </template>
 <script>
@@ -18,10 +19,11 @@ import contactsStore from '@/stores/Contacts'
 import $ from 'jquery'
 import contactsApi from '@/api/Contacts'
 import modalmessage from '@/components/ModalMessage'
+import ConfirmModal from '@/components/ConfirmModal'
 
 export default {
   name: 'contacts',
-  components: {searchpanel, datapager, cardlist, contactEditor, modalmessage},
+  components: {searchpanel, datapager, cardlist, contactEditor, modalmessage, ConfirmModal},
   mounted () {
     this.getContact({condition: {}})
   },
@@ -42,6 +44,7 @@ export default {
       headerTitle: '',
       message: '',
       textSearch: '',
+      msgDelete: '',
       validateRule: {
         fields: {
           contactId: {
@@ -89,7 +92,7 @@ export default {
       .then((result) => {
         if (result.status === 200 && result.data.ok === 1) {
           this.showMessage('Insert', 'Success')
-          contactsStore.dispatch('setCurrentPage', 1)
+          this.getContact({condition: {}})
         } else {
           this.showMessage('Insert', 'Error', result.statusText)
         }
@@ -98,23 +101,33 @@ export default {
       })
     },
     editContact () {
-      contactsStore.dispatch('updateContact', this.contact)
-       /* .then(() => {
-         this.contacts = contactsStore.getters.contacts
-      */
+      var data = this.contact
+      delete data['_id']
+      var condition = {'criteria': {'_id': this.contact['_id']}, 'data': {'$set': data}}
+      contactsApi.update(condition)
+      .then((result) => {
+        if (result.status === 200 && result.data.ok === 1) {
+          this.showMessage('Update', 'Success')
+          this.getContact({condition: {}})
+          contactsStore.dispatch('setCurrentPage', 1)
+        } else {
+          this.showMessage('Update', 'Error', result.statusText)
+        }
+      }).catch((result) => {
+        this.showMessage('Update', 'Error', JSON.stringify(result))
+      })
     },
     getContact (condition) {
       contactsApi.get(condition)
       .then((result) => {
         if (result.status === 200) {
-          console.log('result', result)
           contactsStore.dispatch('setContacts', result.data.result)
           contactsStore.dispatch('setTotalPages', result.data.totalPages)
         }
       })
     },
     getSearchCondition () {
-      var condition = {}
+      var condition = {condition: {}}
       if (this.textSearch.length > 0) {
         condition.condition = {'$or': [
             {'id': {'$regex': `.*${this.textSearch}.*`}},
@@ -156,15 +169,31 @@ export default {
       $('#contactModal').modal('show')
     },
     onRemoveClicked (item) {
-      contactsStore.dispatch('removeContact', item)
-       /* .then(() => {
-         this.contacts = contactsStore.getters.contacts
-       }) */
+      this.contact = item
+      this.msgDelete = `Are you sure to delete contact of ${this.contact.firstName + ' ' + this.contact.lastName} [y/n] ?`
+      $('#confirmModal').modal('show')
     },
     onSearchClicked (textSearch) {
       this.textSearch = textSearch
       var condition = this.getSearchCondition()
       this.getContact(condition)
+    },
+    onOKClicked () {
+      var condition = {'id': this.contact.id}
+      $('#confirmModal').modal('hide')
+      contactsApi.remove(condition)
+      .then((result) => {
+        if (result.status === 200 && result.data.ok === 1) {
+          this.showMessage('Delete', 'Success')
+          this.contact = {}
+          contactsStore.dispatch('setCurrentPage', 1)
+          this.getContact({condition: {}})
+        } else {
+          this.showMessage('Delete', 'Error', result.statusText)
+        }
+      }).catch((result) => {
+        this.showMessage('Delete', 'Error', JSON.stringify(result))
+      })
     },
     saveContact (mode) {
       switch (mode) {
@@ -200,7 +229,8 @@ export default {
   watch: {
     getCurrentPage: function (val) {
       var condition = this.getSearchCondition()
-      condition.currentPage = val
+      condition.currentPage = (val < 1 ? 1 : val)
+      console.log('watch', condition, val)
       this.getContact(condition)
     }
   }
