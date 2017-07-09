@@ -1,21 +1,33 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Contacts from '@/pages/Contacts'
-import Basic from '@/components/Basic'
+import Login from '@/pages/Login'
 
 Vue.use(Router)
+
+function requireAuth (to, from, next) {
+  if (!sessionStorage.getItem('loggedIn')) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  } else {
+    next()
+  }
+}
 
 export default new Router({
   routes: [
     {
       path: '/',
       name: 'Contacts',
-      component: Contacts
+      component: Contacts,
+      beforeEnter: requireAuth
     },
     {
-      path: '/basic',
-      name: 'Basic',
-      component: Basic
+      path: '/login',
+      name: 'Login',
+      component: Login
     }
   ]
 })

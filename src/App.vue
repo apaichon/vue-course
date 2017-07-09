@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <menubar> </menubar>
+    <menubar :userAccount="setUserAccount()"> </menubar>
     <router-view></router-view>
   </div>
 </template>
@@ -11,7 +11,15 @@ import semantic from '../node_modules/semantic-ui-css'
 
 export default {
   name: 'app',
-  components: { menubar, semantic }
+  components: { menubar, semantic },
+  methods: {
+    setUserAccount () {
+      if (sessionStorage.getItem('loggedIn')) {
+        let userAccount = JSON.parse(sessionStorage.getItem('loggedIn')).user
+        return userAccount
+      }
+    }
+  }
 }
 </script>
 

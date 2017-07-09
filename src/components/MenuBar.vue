@@ -6,7 +6,9 @@
   <a class="item">Contacts</a>
   <div class="right menu">
     <div class="item">
-        <div class="ui primary button">Login</div>
+      <i class="user icon">{{userAccount}}</i>
+    </div>
+    <div class="item">
     </div>
   </div>
 </div>
@@ -15,6 +17,7 @@
 <script>
 export default {
   name: 'menubar',
+  props: ['userAccount'],
   data () {
     return {
       msg: 'Welcome to Menu Bar'

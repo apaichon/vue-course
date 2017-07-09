@@ -16,7 +16,7 @@ export default {
   remove: (condition) => {
     console.log('remove', condition)
     let url = 'http://localhost:3000/contacts/delete'
-    return axios.delete(url, {'data': condition})
+    return axios.post(url, {'data': condition})
   }
 }
 
