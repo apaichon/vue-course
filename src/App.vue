@@ -1,12 +1,13 @@
 <template>
   <div id="app">
+    <!--<menubar :userAccount="setUserAccount()"> </menubar> -->
     <menubar :userAccount="setUserAccount()"> </menubar>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import menubar from './components/MenuBar'
+import menubar from './components/common/MenuBar'
 import semantic from '../node_modules/semantic-ui-css'
 
 export default {
