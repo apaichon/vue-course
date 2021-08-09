@@ -1,0 +1,32 @@
+[ 
+  {
+    "id": 1,
+    "name": "Activities",
+    "url": "/"
+  },
+  {
+    "id": 2,
+    "name": "Vote",
+    "url": "/vote"
+  },
+  {
+    "id": 3,
+    "name": "Sponsor",
+    "url": "/sponsor"
+  },
+  {
+    "id": 4,
+    "name": "Lotto",
+    "url": "/lotto"
+  },
+  {
+    "id": 5,
+    "name": "Rewards",
+    "url": "/rewards"
+  },
+  {
+    "id": 6,
+    "name": "Buy Coin",
+    "url": "/buycoin"
+  }
+]

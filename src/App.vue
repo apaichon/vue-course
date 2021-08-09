@@ -1,18 +1,29 @@
 <template>
   <div id="app">
     <!--<menubar :userAccount="setUserAccount()"> </menubar> -->
-    <menubar :userAccount="setUserAccount()"> </menubar>
+
+    <!--header -->
+    <!--content -->
+    <menubar :menuItems="menuItems"> </menubar>
     <router-view></router-view>
+    <!--footer -->
   </div>
 </template>
 
 <script>
-import menubar from './components/common/MenuBar'
+
 import semantic from '../node_modules/semantic-ui-css'
+import menubar from './components/common/MenuBar'
+import menuItems from './components/data/menuItems.json'
 
 export default {
   name: 'app',
   components: { menubar, semantic },
+  data () {
+    return {
+      menuItems
+    }
+  },
   methods: {
     setUserAccount () {
       if (sessionStorage.getItem('loggedIn')) {
