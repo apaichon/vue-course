@@ -3,8 +3,10 @@ const createModel = require('./activities.model');
 
 module.exports = function (app) {
   const Model = createModel(app);
-  const paginate = app.get('paginate');
-
+  const paginate = {
+    default: 8,
+    max: 20
+  }
   const options = {
     Model,
     paginate

@@ -12,13 +12,13 @@
 
 <script>
 
-import semantic from '../node_modules/semantic-ui-css'
+// import semantic from '../node_modules/semantic-ui-css'
 import menubar from './components/common/MenuBar'
 import menuItems from './components/data/menuItems.json'
 
 export default {
   name: 'app',
-  components: { menubar, semantic },
+  components: { menubar },
   data () {
     return {
       menuItems

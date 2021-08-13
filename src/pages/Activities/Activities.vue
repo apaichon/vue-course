@@ -1,7 +1,11 @@
 <template>
   <div>
-    <div class="ui embed" data-url="https://www.youtube.com/embed/O6Xo21L0ybE?autoplay=1">
-    </div>
+    <sui-embed
+      aspect-ratio="4:3"
+      id="HTZudKi36bo"
+      placeholder="static/images/extras/image-4by3.jpg"
+      source="youtube"
+    />
     <search-data-category></search-data-category>
     <div style="margin:20px"> <grid-card-list> </grid-card-list> </div>
   </div>
@@ -9,16 +13,12 @@
 <script>
 import GridCardList from '@/components/list-view/GridCardList.vue'
 import SearchDataCategory from '@/components/search/SearchDataCategory.vue'
-import $ from 'jquery'
 
 export default {
   name: 'ActivitiesPage',
   components: {
     GridCardList,
     SearchDataCategory
-  },
-  mounted () {
-    $('.ui.embed').embed()
   }
 }
 </script>

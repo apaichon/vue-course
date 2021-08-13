@@ -4,25 +4,23 @@
     <search-data-category></search-data-category>
     <table class="ui celled table">
   <thead>
-    <tr><th>Name</th>
-    <th>Age</th>
-    <th>Job</th>
+    <tr><th>Id</th>
+    <th>Image</th>
+    <th>Title</th>
+    <th>Category</th>
+    <th>Detail</th>
+    <th>Created At</th>
+    <th>Is Active</th>
   </tr></thead>
   <tbody>
-    <tr>
-      <td data-label="Name">James</td>
-      <td data-label="Age">24</td>
-      <td data-label="Job">Engineer</td>
-    </tr>
-    <tr>
-      <td data-label="Name">Jill</td>
-      <td data-label="Age">26</td>
-      <td data-label="Job">Engineer</td>
-    </tr>
-    <tr>
-      <td data-label="Name">Elyse</td>
-      <td data-label="Age">24</td>
-      <td data-label="Job">Designer</td>
+    <tr v-for="a in items" :key="a.id">
+      <td data-label="Id">{{a.id}}</td>
+      <td data-label="Image"><img height="50" width="50" :src="a.thumbnailUrl" /></td>
+      <td data-label="Title">{{a.title}}</td>
+      <td data-label="Category">{{a.category}}</td>
+      <td data-label="Detail">{{a.detail}}</td>
+      <td data-label="CreatedAt">{{a.createdAt}}</td>
+      <td data-label="IsActive">{{a.isActive}}</td>
     </tr>
   </tbody>
 </table>
@@ -31,8 +29,25 @@
 
 <script>
 import SearchDataCategory from '@/components/search/SearchDataCategory.vue'
+import activitiesService from '@/businesses/activities/services/activitiesService'
+
 export default {
   name: 'ActivitiesEditor',
-  components: { SearchDataCategory }
+  components: { SearchDataCategory },
+  computed: {
+    getItems () {
+      return this.items
+    }
+  },
+  data () {
+    return {
+      items: []
+    }
+  },
+  async mounted () {
+    const result = await activitiesService.getActivities('')
+    // window.console.log('result', result)
+    this.items = result.data.data
+  }
 }
 </script>

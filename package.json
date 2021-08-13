@@ -20,6 +20,7 @@
     "@feathersjs/socketio": "^4.5.11",
     "axios": "^0.16.2",
     "body-parser": "^1.17.2",
+    "cors": "^2.8.5",
     "express-session": "^1.15.3",
     "feathers-sequelize": "^6.2.0",
     "jquery": "^3.2.1",

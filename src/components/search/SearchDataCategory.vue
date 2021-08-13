@@ -3,15 +3,15 @@
     <div class="ui form">
         <div class="fields">
           <div class="six wide field">
-            <div class="ui selection dropdown">
-                <input type="hidden" name="gender">
-                <i class="dropdown icon"></i>
-                <div class="default text">Search Category</div>
-                <div class="menu">
-                    <div class="item" data-value="1">Male</div>
-                    <div class="item" data-value="0">Female</div>
-                </div>
-            </div>
+              <sui-dropdown
+                fluid
+                multiple
+                :max-selections="3"
+                :options="skills"
+                placeholder="Skills"
+                selection
+                v-model="current"
+              />
           </div>
             <div class="ten wide field">
             <div class="ui icon input">
@@ -25,12 +25,33 @@
 </template>
 
 <script>
-import $ from 'jquery'
 
 export default {
   name: 'SearchDataCategory',
-  mounted () {
-    $('.selection.dropdown').dropdown()
+  data () {
+    return {
+      current: null,
+      skills: [
+        { key: 'angular', text: 'Angular', value: 'angular' },
+        { key: 'css', text: 'CSS', value: 'css' },
+        { key: 'design', text: 'Graphic Design', value: 'design' },
+        { key: 'ember', text: 'Ember', value: 'ember' },
+        { key: 'html', text: 'HTML', value: 'html' },
+        { key: 'ia', text: 'Information Architecture', value: 'ia' },
+        { key: 'javascript', text: 'Javascript', value: 'javascript' },
+        { key: 'mech', text: 'Mechanical Engineering', value: 'mech' },
+        { key: 'meteor', text: 'Meteor', value: 'meteor' },
+        { key: 'node', text: 'NodeJS', value: 'node' },
+        { key: 'plumbing', text: 'Plumbing', value: 'plumbing' },
+        { key: 'python', text: 'Python', value: 'python' },
+        { key: 'rails', text: 'Rails', value: 'rails' },
+        { key: 'react', text: 'React', value: 'react' },
+        { key: 'repair', text: 'Kitchen Repair', value: 'repair' },
+        { key: 'ruby', text: 'Ruby', value: 'ruby' },
+        { key: 'ui', text: 'UI Design', value: 'ui' },
+        { key: 'ux', text: 'User Experience', value: 'ux' }
+      ]
+    }
   }
 }
 </script>

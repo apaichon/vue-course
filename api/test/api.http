@@ -9,3 +9,18 @@ Content-Type: application/json
    "thumbnailUrl": "thumbnailUrl",
    "isActive": true
 }
+
+###
+put http://localhost:3030/api/activities/1
+Content-Type: application/json
+
+{
+  "title": "วาดภาพ",
+   "category": "Art / Cultural",
+   "detail": "Matthew is an interior designer living in New York.",
+   "isActive": true,
+   "thumbnailUrl": "static/images/daniel.jpg"
+}
+
+###
+get http://localhost:3030/api/activities/1

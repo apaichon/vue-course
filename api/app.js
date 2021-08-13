@@ -13,6 +13,13 @@ const sequelize = new Sequelize('sequelize', '', '', {
 
 // Create an Express compatible Feathers application instance.
 const app = express(feathers());
+var cors = require('cors')
+var corsOptions = {
+  origin: 'http://localhost:8080',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
+
 app.set("sequelizeClient", sequelize);
 
 const services = require("./services");
