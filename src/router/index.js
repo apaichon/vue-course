@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Activities from '@/pages/Activities'
+import Activities from '@/pages/Activities/Activities'
+import ActivitiesEditor from '@/pages/Activities/ActivitiesEditor'
 import Vote from '@/pages/Vote'
 import Sponsor from '@/pages/Sponsor'
 import Lotto from '@/pages/Lotto'
@@ -40,6 +41,11 @@ export default new Router({
       path: '/',
       name: 'Activities',
       component: Activities
+    },
+    {
+      name: 'ActivitiesEditor',
+      path: '/activities/editor',
+      component: ActivitiesEditor
     },
     {
       path: '/vote',

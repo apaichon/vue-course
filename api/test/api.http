@@ -1,0 +1,11 @@
+###
+post http://localhost:3030/api/activities
+Content-Type: application/json
+
+{
+  "title": "วาดภาพ",
+   "category": "Art / Cultural",
+   "detail": "Matthew is an interior designer living in New York.",
+   "thumbnailUrl": "thumbnailUrl",
+   "isActive": true
+}
