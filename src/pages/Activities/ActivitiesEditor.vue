@@ -1,7 +1,7 @@
 <template>
   <div class="ui segment">
     <h4 class="ui header">Activities Editor</h4>
-    <search-data-category></search-data-category>
+    <search-data-category :dataItems="categories" @onSearchClick="onSearchClick"></search-data-category>
     <table class="ui celled table">
   <thead>
     <tr><th>Id</th>
@@ -13,7 +13,7 @@
     <th>Is Active</th>
   </tr></thead>
   <tbody>
-    <tr v-for="a in items" :key="a.id">
+    <tr v-for="a in activitiesTuple" :key="a.id">
       <td data-label="Id">{{a.id}}</td>
       <td data-label="Image"><img height="50" width="50" :src="a.thumbnailUrl" /></td>
       <td data-label="Title">{{a.title}}</td>
@@ -29,25 +29,48 @@
 
 <script>
 import SearchDataCategory from '@/components/search/SearchDataCategory.vue'
-import activitiesService from '@/businesses/activities/services/activitiesService'
+import {mapGetters, mapActions} from 'vuex'
+import data from '@/businesses/activities/data'
+
+window.console.log('data', data)
 
 export default {
   name: 'ActivitiesEditor',
   components: { SearchDataCategory },
   computed: {
-    getItems () {
-      return this.items
-    }
+    ...mapGetters({
+      activitiesTuple: 'activities/activitiesTuple'
+    })
   },
   data () {
     return {
-      items: []
+      selectedCategory: null,
+      ...data
     }
   },
   async mounted () {
-    const result = await activitiesService.getActivities('')
-    // window.console.log('result', result)
-    this.items = result.data.data
+    await this.getActivities('')
+  },
+  methods: {
+    ...mapActions(
+      {
+        getActivities: 'activities/getActivities'
+      }
+    ),
+    async onSearchClick (searchItem) {
+      // window.console.log('selectedItem', searchItem)
+      let searchConditions = ''
+      if (searchItem.textSearch && searchItem.selectedItem.length > 0) {
+        searchConditions = searchItem.selectedItem.map(a => {
+          return a + `[$like]=%${searchItem.textSearch}%`
+        })
+        // searchCondition = '?' + searchCondition.substring(0, searchCondition.length - 1)
+        // window.console.log('search condition', searchCondition)
+      }
+      const queryString = '?' + searchConditions.join('&')
+      window.console.log(queryString)
+      await this.getActivities({textSearch: queryString})
+    }
   }
 }
 </script>

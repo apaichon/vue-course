@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import SuiVue from 'semantic-ui-vue'
+import store from './businesses'
 
 Vue.config.productionTip = false
 Vue.use(SuiVue)
@@ -12,6 +13,7 @@ Vue.use(SuiVue)
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

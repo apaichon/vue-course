@@ -1,16 +1,16 @@
-/* const CREATE_ACTIVITY = "createActivity";
-export const GET_ACTIVITIES = "getActivities";
-export const UPDATE_ACTIVITY = "updateActivity";
-export const DELETE_ACTIVITY = "deleteActivity";
-*/
+import activitiesService from '../services/activitiesService'
+const SET_ACTIVITY = 'setActivities'
+const SET_PAGINATION = 'setPagination'
 
 // actions
 const actions = {
-  /* getActivities({ commit }, { textSearch }) {
-    service.getInvoice({ invoice_id }).then(response => {
-      commit(SET_INVOICE_MUTATION, response.data);
+  getActivities ({commit}, {textSearch}) {
+    activitiesService.getActivities(textSearch).then(response => {
+      const {data, limit, skip, total} = response.data
+      commit(SET_ACTIVITY, data)
+      commit(SET_PAGINATION, {limit, skip, total})
     })
-  } */
+  }
 }
 
 export {

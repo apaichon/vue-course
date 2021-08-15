@@ -7,7 +7,9 @@ export default {
     return axios.post(url, data)
   },
   get: (condition = '') => {
-    return axios.get(url + condition)
+    // window.console.log('condition', url + condition)
+    // window.console.log(encodeURI(url + condition))
+    return axios.get(encodeURI(url + condition))
   },
   update: (condition) => {
     return axios.put(url, condition)
